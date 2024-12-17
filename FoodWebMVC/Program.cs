@@ -1,4 +1,4 @@
-using FoodWebMVC.Hubs;
+﻿using FoodWebMVC.Hubs;
 using FoodWebMVC.Interfaces;
 using FoodWebMVC.Models;
 using FoodWebMVC.Repositories;
@@ -141,6 +141,15 @@ if (!app.Environment.IsDevelopment())
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
+
+app.Use(async (context, next) =>
+{
+	var request = context.Request;
+	var baseUrl = $"{request.Scheme}://{request.Host}";
+	builder.Configuration["AppSettings:BaseUrl"] = baseUrl; // Cập nhật BaseUrl trong Configuration
+	await next();
+});
+
 
 // handler error 404 page
 app.UseStatusCodePagesWithRedirects("/Home/Error?statuscode = {0}");
